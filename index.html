@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>merkl cors test</title></head>
+<body>
+<h3>Merkl credentialed CORS test</h3>
+<p>This page (origin: github.io) makes a credentialed cross-site fetch to api.merkl.xyz/v4/auth/me.</p>
+<pre id="out">running...</pre>
+<script>
+const out = document.getElementById('out');
+async function run() {
+  let lines = [];
+  try {
+    const r = await fetch('https://api.merkl.xyz/v4/auth/me', { credentials: 'include' });
+    const t = await r.text();
+    lines.push('WITH-CREDENTIALS HTTP ' + r.status);
+    lines.push(t.slice(0, 600));
+  } catch (e) {
+    lines.push('WITH-CREDENTIALS FETCH ERROR: ' + e.message);
+  }
+  try {
+    const r2 = await fetch('https://api.merkl.xyz/v4/auth/me', { credentials: 'omit' });
+    const t2 = await r2.text();
+    lines.push('NO-CREDENTIALS HTTP ' + r2.status);
+    lines.push(t2.slice(0, 300));
+  } catch (e) {
+    lines.push('NO-CREDENTIALS FETCH ERROR: ' + e.message);
+  }
+  out.textContent = lines.join('\n');
+}
+run();
+</script>
+</body></html>
