@@ -1,16 +1,29 @@
 <!DOCTYPE html>
-<html><head><meta charset="utf-8"><title>wc link reader</title></head>
+<html><head><meta charset="utf-8"><title>wc link reader</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>body{font-family:sans-serif;margin:16px} #out{word-break:break-all;font-size:13px} #qr{margin:16px 0} button{font-size:16px;padding:10px 18px;margin:6px 4px}</style>
+</head>
 <body>
-<h3>Paste the WalletConnect link here</h3>
-<textarea id="t" rows="6" cols="70" placeholder="click here, then Ctrl+V"></textarea>
-<br><button id="b">Show pasted text</button>
+<h3>Tempel link WalletConnect di sini</h3>
+<textarea id="t" rows="4" cols="60" placeholder="klik di sini, lalu Ctrl+V"></textarea>
+<br>
+<button id="b">Tampilkan + buat QR besar</button>
+<button id="c">Salin teks</button>
+<div id="qr"></div>
 <pre id="out">waiting</pre>
 <script>
-document.getElementById('b').onclick = () => {
-  document.getElementById('out').textContent = document.getElementById('t').value;
+function show(){
+  var v = document.getElementById('t').value.trim();
+  document.getElementById('out').textContent = v;
+  var q = document.getElementById('qr'); q.innerHTML = '';
+  if (v) { new QRCode(q, { text: v, width: 320, height: 320, correctLevel: QRCode.CorrectLevel.M }); }
+}
+document.getElementById('b').onclick = show;
+document.getElementById('t').addEventListener('paste', function(){ setTimeout(show, 60); });
+document.getElementById('c').onclick = function(){
+  var v = document.getElementById('t').value;
+  if (navigator.clipboard) { navigator.clipboard.writeText(v); }
+  document.getElementById('c').textContent = 'Tersalin!';
 };
-document.getElementById('t').addEventListener('paste', () => {
-  setTimeout(() => { document.getElementById('out').textContent = document.getElementById('t').value; }, 50);
-});
 </script>
 </body></html>
